@@ -103,6 +103,104 @@ class GetBehavior(APIView):
         serializer=Behaviorserializer(obj,many=True)
         return Response({'status':status.HTTP_200_OK,'data':serializer.data})
 
+class AddNewPets(APIView):
+    def post(self,request):
+        if request.session.has_key('username'):
+            username=request.session['username']
+            animal_name=request.data['Animal_name']
+            breed=request.data['Breed']
+            vaccination=request.data['vaccination']
+            userpk=registeration.objects.get(username=username).id
+            aniamlpk=Animal.objects.get(Animal_name=animal_name).id
+            breedpk=AnimalBreed.objects.get(Breed=breed).id
+            vaccinationpk=Vaccination.objects.get(vaccination=vaccination).id
+            obj={
+                'username':userpk,
+                'vaccination':vaccinationpk,
+                'animal_name':aniamlpk,
+                'Breed':breedpk,
+                'Allergies':request.data['Allergies'],
+                'Health_condition':request.data['Health_condition'],
+                'Email':request.data['Email'],
+                'mobilenumber':request.data['mobilenumber'],
+                'age':request.data['age'],
+                'Gender':request.data['Gender'],
+                'Diet':request.data['Diet']
+            }
+            serializer=Addpetsserializer(data=obj)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'status':status.HTTP_200_OK,'message':'success'})
+            return Response({'status':status.HTTP_400_BAD_REQUEST,'error':serializer.errors})
+        return Response({'status':status.HTTP_401_UNAUTHORIZED,'message':'Login required'})
+    
+
+class getallavailablepets(APIView):
+    def get(self,request):
+        if request.session.has_key('username'):
+            obj=Addedpets.objects.filter(Available=True)
+            serializer=Addpetsserializer(obj,many=True)
+            return Response({'status':status.HTTP_200_OK,'data':serializer.data})
+        else:
+            return Response({'status':status.HTTP_401_UNAUTHORIZED,'error':'login required'})
+    
+class getmypets(APIView):
+    def get(self,request):
+        if request.session.has_key('username'):
+            username=request.session['username']
+            obj=Addedpets.objects.filter(username__username=username)
+            serializer=Addpetsserializer(obj,many=True)
+            return Response({'status':status.HTTP_200_OK,'data':serializer.data})
+        return Response({'status':status.HTTP_401_UNAUTHORIZED,'error':'login required'})
+    
+class getpetsbyid(APIView):
+    def get(self,request,pets_id):
+        obj=Addedpets.objects.get(id=pets_id)
+        serializer=Addpetsserializer(obj)
+        return Response({'status':status.HTTP_200_OK,'data':serializer.data})
+
+
+class updatepets(APIView):
+    def post(self,request,pets_id):
+        if request.session.has_key('username'):
+            obj=Addedpets.objects.get(id=pets_id)
+            serializer=Addpetsserializer(obj,data=request.data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'status':status.HTTP_200_OK,'message':'success'})
+            return Response({'status':status.HTTP_400_BAD_REQUEST,'error':serializer.errors})
+        return Response({'status':status.HTTP_401_UNAUTHORIZED,'error':'login required'})
+
+class EnterAdopterdetails(APIView):
+    def post(self,request):
+       if request.session.has_key('username'):
+            username=request.session['username']
+            petspk=request.data['pets_detail']
+            userid=registeration.objects.get(username=username).id
+            data=request.data.copy()
+            data['username']=userid
+            serializer=PetAdopterserializer(data=data)
+            obj=Addedpets.objects.filter(id=petspk).update(Available=False)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'status':status.HTTP_200_OK,'message':'success'})
+            return Response({'status':status.HTTP_400_BAD_REQUEST,'errors':serializer.errors})
+       else:
+           return Response({'status':status.HTTP_401_UNAUTHORIZED,'error':'login required'})
+    
+
+
+    
+
+        
+        
+
+
+        
+
+    
+    
+
 
     
 

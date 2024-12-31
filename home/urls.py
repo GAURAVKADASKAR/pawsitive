@@ -10,6 +10,12 @@ urlpatterns = [
     path('GetAnimalname/',GetAnimalname.as_view()),
     path('GetVaccinationByName/',GetVaccinationByName.as_view()),
     path('GetBreed/',GetBreed.as_view()),
-    path('GetBehavior/',GetBehavior.as_view())
+    path('GetBehavior/',GetBehavior.as_view()),
+    path('AddNewPets/',AddNewPets.as_view()),
+    path('getallavailablepets/',getallavailablepets.as_view()),
+    path('getmypets/',getmypets.as_view()),
+    path('getpetsbyid/<pets_id>/',getpetsbyid.as_view()),
+    path('updatepets/<pets_id>/',updatepets.as_view()),
+    path('EnterAdopterdetails/',EnterAdopterdetails.as_view()),
  
 ]

@@ -65,6 +65,17 @@ class Behaviorserializer(ModelSerializer):
         model=AnimalBehavior
         fields="__all__"
 
+class Addpetsserializer(ModelSerializer):
+    class Meta:
+        model=Addedpets
+        fields="__all__"
+    
+class PetAdopterserializer(ModelSerializer):
+    class Meta:
+        model=PetAdopter
+        fields="__all__"
+    
+
 
 
 

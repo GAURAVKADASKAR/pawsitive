@@ -54,8 +54,24 @@ class Addedpets(models.Model):
     Email=models.TextField()
     Health_condition=models.TextField()
     Allergies=models.TextField()
+    Available=models.BooleanField(default=True)
+    def __str__(self):
+        return self.Email
+
+class PetAdopter(models.Model):
+    username=models.ForeignKey(registeration,on_delete=models.SET_NULL,null=True,blank=True)
+    pets_detail=models.ForeignKey(Addedpets,on_delete=models.SET_NULL,null=True,blank=True)
+    name=models.CharField(max_length=50)
+    gender=models.CharField(max_length=20)
+    contact_email=models.CharField(max_length=20,default='')
+    contact_number=models.TextField(default='')
+    address=models.TextField()
+    occupation=models.TextField()
+    pet_experiance=models.TextField()
+    another_pets=models.BooleanField(default=False)
+    permissionTovisit=models.BooleanField(default=True)
+    final_permission=models.BooleanField(default=True)
 
     def __str__(self):
-        return self.animal_name
-
+        return self.name
 
